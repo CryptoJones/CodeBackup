@@ -37,18 +37,48 @@ If ($intPreviousMonth -lt 10) {
     $strPreviousMonth = $intPreviousMonth
 }
 
+# Datbase backups #
+
+$strLocalPath =  $strFullPath -replace ".7z", ".db.7z"
+
 $strFilePatternToDelete = $strCurrentYear + "-" + $strPreviousMonth + "*.7z"
 $strRemoveItemParam = "S:\" + $strFilePatternToDelete
-
-Compress-7Zip -ArchiveFileName $strFullPath "C:\PATH\PATH2\PATH3"
-
+$strRemoveItemParam  = $strRemoveItemParam -replace ".7z", ".db.7z"
+ 
+Compress-7Zip -ArchiveFileName $strLocalPath "C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\Backup"
+ 
 Remove-Item $strRemoveItemParam
-
+ 
 $strMessage = "Deleting " + $strRemoveItemParam
 echo $strMessage
 
-Start-Sleep -s 30
+# Svn Backups #
+ 
+$strFilePatternToDelete = $strCurrentYear + "-" + $strPreviousMonth + "*.7z"
+$strRemoveItemParam = "S:\" + $strFilePatternToDelete
+$strRemoveItemParam  = $strRemoveItemParam -replace "db.7z", ".svn.7z"
 
+$strLocalPath =  $strFullPath -replace ".7z", ".svn.7z"
+ 
+Compress-7Zip -ArchiveFileName $strLocalPath "C:\Source"
+ 
+Remove-Item $strRemoveItemParam
+ 
+$strMessage = "Deleting " + $strRemoveItemParam
+echo $strMessage
+
+# Web backups #
+
+$strLocalPath =  $strFullPath -replace ".7z", ".www.7z"
+
+$strFilePatternToDelete = $strCurrentYear + "-" + $strPreviousMonth + "*.7z"
+$strRemoveItemParam = "S:\" + $strFilePatternToDelete
+$strRemoveItemParam  = $strRemoveItemParam -replace ".svn.7z", ".www.7z"
+ 
+Compress-7Zip -ArchiveFileName $strLocalPath "C:\inetpub"
+ 
+Remove-Item $strRemoveItemParam
+ 
 $Drive = Get-WmiObject -Class Win32_mappedLogicalDisk -filter "ProviderName='\\\\server01\\PATH\\PATH2\\PATH3'"
 
 net use $Drive.Name /delete /y
