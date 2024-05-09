@@ -6,7 +6,7 @@ $strFullPath = "S:\" + $strCurrentFileName
 
 Import-Module C:\bin\7Zip4PowerShell.dll
 
-(New-Object -ComObject WScript.Network).MapNetworkDrive('S:','\\server01\PATH\PATH2\PATH3',$true,'domain\user','IL0veG0@tS3X')
+(New-Object -ComObject WScript.Network).MapNetworkDrive('S:','\\server01\PATH\PATH2\PATH3',$true,'domain\user','IL0veG0@tS')
 If (Test-Path $strFullPath){
 	Remove-Item $strFullPath
 }
